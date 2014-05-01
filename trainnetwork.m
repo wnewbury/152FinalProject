@@ -1,8 +1,8 @@
-x = patterns2';
-t = targets2';
+x = patterns';
+t = targets';
 
 % Create a Pattern Recognition Network
-hiddenLayerSize = [10000 1000 100];
+hiddenLayerSize = [101 100 99 100];
 net = patternnet(hiddenLayerSize);
 net.performFcn = 'crossentropy';
 net.trainParam.epochs = 100000;
@@ -25,7 +25,11 @@ yind = vec2ind(y);
 percentErrors = sum(tind ~= yind)/numel(tind);
 performance = perform(net,t,y)
     
-plotperf(tr)
+%plotperf(tr)
 
 %view(net)
+
+dlmwrite('net_output_size.txt', [length(y')]);
+
+dlmwrite('net_output.txt', y', ' ');
 

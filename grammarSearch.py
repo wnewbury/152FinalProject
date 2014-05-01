@@ -30,7 +30,7 @@ def viterbiSearch( N, T, B, A):
 		delta[i][0] = B[i][0]
 		psi[i][0] = 0
 
-	# main loop: 
+	# main loop:
 	# computes delta (scores) and psi (category values corresponding to best scores)
 	# max score is probabiliy of being in state i and transitioning from state i to state j
 	for t in range(1, T):
@@ -82,10 +82,17 @@ def convertPhonemeSetToWord(phonemeSet):
 	while not(done):
 
 		newSet = []
-		newSet.append(workingSet[0])
+		#index = 0
+		#while index < len(phonemeSet):
+		# SAFTEY !!!!!!!!!!!!!!!!!!!!!!
+		if workingSet[0] != 25:
+			newSet.append(workingSet[0])
+			#break
+
 		for i in range(1, len(workingSet)):
 			if workingSet[i] != workingSet[i-1]:
-				newSet.append(workingSet[i])
+				if workingSet[i] != 25:
+					newSet.append(workingSet[i])
 
 		if len(newSet) == len(workingSet):
 			done = True
@@ -108,7 +115,9 @@ def convertPhonemeSetToWord(phonemeSet):
 
 def getDictionary():
 	#dictionary = util.Counter()
-	dictionary = { (0,3,27): "WORD" }
+	dictionary = { (18, 2, 29): "cat", (28, 0, 26, 24, 19, 17): "sharply" }
+
+	print dictionary
 
 	return dictionary
 
@@ -116,18 +125,51 @@ def getDictionary():
 def getGrammarMatrix():
 
 	# number of phonemes
-	N = 29
+	N = 36
 
 	matrix = [ [0 for n in range(N)] for m in range(N) ]
+
+	for i in range(N):
+		matrix[i][i] = 1
+
+	# sharply
+	matrix[25][28] = 1
+	matrix[28][0] = 1
+	matrix[0][26] = 1
+	matrix[26][24] = 1
+	matrix[24][19] = 1
+	matrix[19][17] = 1
+	matrix[17][25] = 1
+	matrix[0][25] = 1
+
+
+
+	matrix[18][2] = 1
+	matrix[2][29] = 1
+	matrix[29][29] = 1
+
+
+
+	'''
+
+
+	matrix[25][25] = .5
+	matrix[28][28] = .5
+	matrix[0][0] = .5
+	matrix[26][26] = .5
+	matrix[24][24] = .5
+	matrix[19][19] = .5
+	matrix[17][17] = .5
+	'''
 
 	return matrix
 
 
 def parseFileForMatrix(fileName, numFrames):
 
-	N = 29
+	N = 36
 	matrix = [ [0 for t in range(numFrames)] for n in range(N) ]
-	
+
 	matrixFile = open(fileName, 'r')
 	lines = (line.rstrip('\n') for line in matrixFile)
 
@@ -135,7 +177,6 @@ def parseFileForMatrix(fileName, numFrames):
 	for line in lines:
 
 		words = line.split()
-
 		for i in range(len(words)):
 			matrix[i][frame] = float(words[i])
 
@@ -147,9 +188,16 @@ def parseFileForMatrix(fileName, numFrames):
 
 
 def parseFileForFrameNumber(fileName):
-	
+
 	frameFile = open(fileName, 'r')
-	fileString = frameFile.read(1);
+
+	lines = (line.rstrip('\n') for line in frameFile)
+
+	fileString = None
+	for line in lines:
+		words = line.split()
+		fileString = words[0]
+		break
 
 	result = int(fileString)
 
@@ -163,7 +211,7 @@ def main(argv):
 	fileTwoName = argv[1]
 
 	# number of phonemes
-	N = 29
+	N = 36
 
 	numFrames = parseFileForFrameNumber(fileTwoName)
 
