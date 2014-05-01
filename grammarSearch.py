@@ -108,8 +108,7 @@ def convertPhonemeSetToWord(phonemeSet):
 
 def getDictionary():
 	#dictionary = util.Counter()
-	#dictionary = { (0,3,27): "WORD" }
-	dictionary = {}
+	dictionary = { (0,3,27): "WORD" }
 
 	return dictionary
 
@@ -119,7 +118,7 @@ def getGrammarMatrix():
 	# number of phonemes
 	N = 29
 
-	matrix = [ [1 for n in range(N)] for m in range(N) ]
+	matrix = [ [0 for n in range(N)] for m in range(N) ]
 
 	return matrix
 
